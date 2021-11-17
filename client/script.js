@@ -1,5 +1,16 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.134.0";
 
+socket = io();
+
+function setForce(val) {
+    socket.emit("custom/setForce", val);
+}
+let cursor = document.getElementById("range");
+socket.on("custom/getAngle", val => {
+    cursor.value = val;
+    setForce(val);
+});
+
 /* variables utilises pour stocker la position de la camera et la position de l'objet a regarder */
 let pos = {x: 0, y: 0, z: 100};
 let look = {x: 0, y: 0};
