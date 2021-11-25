@@ -92,7 +92,6 @@ cube1.castShadow = true;
 cube2.castShadow = true;
 cube3.castShadow = true;
 
-
 //x = -2.8 y = 1.3 z=0
 //x = 0.8  y = 1.3  z = -3.9 
 //x = 0.8 y = 1.3 z = 3.9
@@ -133,8 +132,12 @@ window.addEventListener("keyup", ev => {
     }
 });
 
-controls.update();
-
+let mouseDelta = {x: 0, y: 0};
+let camRot = {x: 0, y: 0};
+window.addEventListener("mousemove", ev => {
+    mouseDelta.x += ev.movementX;
+    mouseDelta.y += ev.movementY;
+});
 
 //animation camera + renderer
 function render(time){
@@ -148,13 +151,20 @@ function render(time){
     last = time;
     let newPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
     let mx = Math.cos(camera.rotation.z)*moveX + Math.sin(camera.rotation.z)*moveY;
-    let my = -Math.sin(camera.rotation.z)*moveX+ Math.cos(camera.rotation.z)*moveY;
+    let my = -Math.sin(camera.rotation.z)*moveX + Math.cos(camera.rotation.z)*moveY;
     newPos.x += mx * dt * 2;
     newPos.z += my * dt * 2;
     camera.position.set(newPos.x, newPos.y, newPos.z);
 
-
-
+    // change camera orientation
+    camRot.x += mouseDelta.x * 0.01;
+    camRot.y += mouseDelta.y * 0.01;
+    mouseDelta = {x: 0, y: 0};
+    camera.lookAt(
+        Math.cos(camRot.x) * Math.sin(camRot.y) + camera.position.x,
+        Math.cos(camRot.y) + camera.position.y,
+        Math.sin(camRot.x) * Math.sin(camRot.y) + camera.position.z
+    );
 
     //animation du cube
     cube1.rotation.x += 0.015;
