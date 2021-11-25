@@ -60,6 +60,26 @@ loader.load('./map3D/map.gltf', function(gltf){
     console.error(error);
 });
 
+//load des ciseaux
+
+var ciseaux = null;
+loader.load('./map3D/ciseaux.glb', function(glb){
+    console.log(glb);
+    ciseaux = glb.scene;
+    glb.scene.traverse(node => {
+        if(node.isMesh){
+            node.castShadow = true;        
+            node.receiveShadow = true;
+        }
+    })
+    glb.scene.scale.set(0.1,0.1,0.1);
+    scene.add(glb.scene);
+    console.log('yo');
+}, undefined, function(error){
+    console.error(error);
+});
+
+
 
 //light
 const yo = new THREE.AmbientLight(0x404040, 5); // soft white light
@@ -142,8 +162,7 @@ window.addEventListener("mousemove", ev => {
 //animation camera + renderer
 function render(time){
 
-    //controls.update();
-   // requestAnimationFrame(render);
+
 
     renderer.render(scene, camera);
 
@@ -160,11 +179,20 @@ function render(time){
     camRot.x += mouseDelta.x * 0.01;
     camRot.y += mouseDelta.y * 0.01;
     mouseDelta = {x: 0, y: 0};
-    camera.lookAt(
-        Math.cos(camRot.x) * Math.sin(camRot.y) + camera.position.x,
-        Math.cos(camRot.y) + camera.position.y,
-        Math.sin(camRot.x) * Math.sin(camRot.y) + camera.position.z
-    );
+    var lookPos = {
+        x : Math.cos(camRot.x) * Math.sin(camRot.y) + camera.position.x,
+        y :  Math.cos(camRot.y) + camera.position.y,
+        z : Math.sin(camRot.x) * Math.sin(camRot.y) + camera.position.z
+    };
+    camera.lookAt(lookPos.x, lookPos.y, lookPos.z);
+    if(ciseaux != null){
+        ciseaux.children[0].children[1].morphTargetInfluences[0] = Math.cos(time*0.01);
+        ciseaux.children[0].children[0].morphTargetInfluences[0] = Math.sin(time*0.01);
+        
+        ciseaux.children[0].children[1].updateMorphTargets();
+        ciseaux.children[0].children[0].updateMorphTargets();
+        ciseaux.position.set(lookPos.x, lookPos.y, lookPos.z);
+    }
 
     //animation du cube
     cube1.rotation.x += 0.015;
