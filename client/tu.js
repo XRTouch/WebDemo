@@ -1,4 +1,5 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.134.0";
+import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
+
 
 
             //creation de la scene , camera
@@ -11,7 +12,7 @@ import * as THREE from "https://cdn.skypack.dev/three@0.134.0";
 
             //creation du cube 3D
             const geometry = new THREE.BoxGeometry();
-            const material = new THREE.MeshLambertMaterial({color :0x00ff00});
+            const material = new THREE.MeshBasicMaterial({color :0x00ff00});
             const cube = new THREE.Mesh(geometry, material);
             scene.add(cube);
 
@@ -35,12 +36,12 @@ import * as THREE from "https://cdn.skypack.dev/three@0.134.0";
             scene.add(cone);*/
 
 
-            const light = new THREE.AmbientLight(0x404040, 2); // soft white light
+        /*    const light = new THREE.AmbientLight(0x404040, 2); // soft white light
             scene.add(light);
-
+*/
             //creation de texte
-        /*    var fontload = new THREE.FontLoader()
-            fontload.load('/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+           /* var fontload = new THREE.FontLoader();
+            fontload.load('./font/LucidaBrightRegular.ttf', function(font) {
 
                 const geometry3 = new THREE.TextGeometry( 'XrTouch', {
                     font: font, 
@@ -59,19 +60,35 @@ import * as THREE from "https://cdn.skypack.dev/three@0.134.0";
 
             var mesh = new THREE.Mesh( geometry3, textMaterial );
 
-            scene.add( mesh );*/
+            scene.add( mesh );
+            */
+
+            //controle camera autour d'un objet
+           /* const controls = new OrbitControls(camera, renderer.domElement);
+             camera.position.set(0, 20, 100);
+             camera.update();
+*/
 
 
+            //load de l'espace 3D 
+/*
 
+            const loader = new THREE.GLTFLoader();
 
+            loader.load('./map3D/map.gltf', function(gltf){
+                scene.add(gltf.scene);
+            }, undefined, function(error){
+                console.error(error);
+            });
 
-
+*/
             function animate(){
                 requestAnimationFrame(animate);
+                //controls.update();
                 renderer.render(scene, camera);
                 
 
-                //animation du cube
+               //animation du cube
                  cube.rotation.x += 0.015;
                  cube.rotation.y += 0.01;
 

@@ -19,6 +19,6 @@
   "homepage": "https://github.com/XRTouch/WebDemo#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^4.3.2"
+    "socket.io": "^4.4.0"
   }
 }
