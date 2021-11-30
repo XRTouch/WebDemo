@@ -97,17 +97,35 @@ renderer.setAnimationLoop(render);
 
 //cube 
 
-const geometry = new THREE.BoxGeometry(0.2,0.2,0.2);
+let plaqueVerre = {
+    durete = 2
+    //green
+};
+let plaqueFeuille = {
+    durete = 1
+    //blue
+};
+let plaqueFer = {
+    durete = 3
+    //red
+};
+
+
+const geometryCentre = new THREE.BoxGeometry(0.5,0.05,0.8);
+const geometryGauche = new THREE.BoxGeometry(0.5,0.02,0.8);
+const geometryDroit = new THREE.BoxGeometry(0.6,0.035,1);
 const material = new THREE.MeshStandardMaterial({color :0x00ff00});
-const cube1 = new THREE.Mesh(geometry, material);
-const cube2 = new THREE.Mesh(geometry, material);
-const cube3 = new THREE.Mesh(geometry, material);
+const cube1 = new THREE.Mesh(geometryCentre, material);
+const cube2 = new THREE.Mesh(geometryDroit, material);
+const cube3 = new THREE.Mesh(geometryGauche, material);
 scene.add(cube1);
 scene.add(cube2);
 scene.add(cube3);
 cube1.position.set(-2.8,1.3,0);
 cube2.position.set(-0.8,1.3,-3.9);
+cube2.rotation.set(0,-0.78,0);
 cube3.position.set(-0.8,1.3,3.9);
+cube3.rotation.set(0,0.78,0);
 cube1.castShadow = true;
 cube2.castShadow = true;
 cube3.castShadow = true;
@@ -186,8 +204,8 @@ function render(time){
     };
     camera.lookAt(lookPos.x, lookPos.y, lookPos.z);
     if(ciseaux != null){
-        ciseaux.children[0].children[1].morphTargetInfluences[0] = Math.cos(time*0.01);
-        ciseaux.children[0].children[0].morphTargetInfluences[0] = Math.sin(time*0.01);
+        ciseaux.children[0].children[1].morphTargetInfluences[1] = 1;
+        ciseaux.children[0].children[0].morphTargetInfluences[1] = 1;   
         
         ciseaux.children[0].children[1].updateMorphTargets();
         ciseaux.children[0].children[0].updateMorphTargets();
@@ -195,12 +213,12 @@ function render(time){
     }
 
     //animation du cube
-    cube1.rotation.x += 0.015;
-    cube1.rotation.y += 0.01;
-    cube2.rotation.x += 0.015;
-    cube2.rotation.y += 0.01;
-    cube3.rotation.x += 0.015;
-    cube3.rotation.y += 0.01;
+    // cube1.rotation.x += 0.015;
+    // cube1.rotation.y += 0.01;
+    // cube2.rotation.x += 0.015;
+    // cube2.rotation.y += 0.01;
+    // cube3.rotation.x += 0.015;
+    // cube3.rotation.y += 0.01;
 }
 
 
