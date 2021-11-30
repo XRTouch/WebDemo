@@ -98,15 +98,15 @@ renderer.setAnimationLoop(render);
 //cube 
 
 let plaqueVerre = {
-    durete = 2
+    durete : 2
     //green
 };
 let plaqueFeuille = {
-    durete = 1
+    durete : 1
     //blue
 };
 let plaqueFer = {
-    durete = 3
+    durete : 3
     //red
 };
 
@@ -114,21 +114,34 @@ let plaqueFer = {
 const geometryCentre = new THREE.BoxGeometry(0.5,0.05,0.8);
 const geometryGauche = new THREE.BoxGeometry(0.5,0.02,0.8);
 const geometryDroit = new THREE.BoxGeometry(0.6,0.035,1);
-const material = new THREE.MeshStandardMaterial({color :0x00ff00});
+
+let centre = new THREE.MeshStandardMaterial({color :0x00ff00});
+let droit = new THREE.MeshStandardMaterial({color :0x00ff00});
+let gauche = new THREE.MeshStandardMaterial({color :0x00ff00});
+centre.propriete = {  durete : 3};
+droit.propriete = {  durete : 2};
+gauche.propriete = {  durete : 1};
+
+
+
 const cube1 = new THREE.Mesh(geometryCentre, material);
 const cube2 = new THREE.Mesh(geometryDroit, material);
 const cube3 = new THREE.Mesh(geometryGauche, material);
+
 scene.add(cube1);
 scene.add(cube2);
 scene.add(cube3);
+
 cube1.position.set(-2.8,1.3,0);
 cube2.position.set(-0.8,1.3,-3.9);
 cube2.rotation.set(0,-0.78,0);
 cube3.position.set(-0.8,1.3,3.9);
 cube3.rotation.set(0,0.78,0);
+
 cube1.castShadow = true;
 cube2.castShadow = true;
 cube3.castShadow = true;
+
 
 //x = -2.8 y = 1.3 z=0
 //x = 0.8  y = 1.3  z = -3.9 
