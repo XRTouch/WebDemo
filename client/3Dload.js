@@ -115,18 +115,33 @@ const geometryCentre = new THREE.BoxGeometry(0.5,0.05,0.8);
 const geometryGauche = new THREE.BoxGeometry(0.5,0.02,0.8);
 const geometryDroit = new THREE.BoxGeometry(0.6,0.035,1);
 
-let centre = new THREE.MeshStandardMaterial({color :0x00ff00});
-let droit = new THREE.MeshStandardMaterial({color :0x00ff00});
-let gauche = new THREE.MeshStandardMaterial({color :0x00ff00});
-centre.propriete = {  durete : 3};
+let centre = new THREE.MeshStandardMaterial();
+let droit = new THREE.MeshStandardMaterial();
+let gauche = new THREE.MeshStandardMaterial();
+
+
+centre.propriete = {  durete : 3};//fer
+
+const loadertexture = new THREE.TextureLoader();
+loadertexture.load('texture/metal/diff.jpg', function(img){ centre.map = img; centre.needsUpdate = true;});
+loadertexture.load('texture/metal/nor.exr', function(img){ centre.normalMap = img; centre.needsUpdate = true;});
+loadertexture.load('texture/metal/rough.jpg', function(img){ centre.roughnessMap = img; centre.needsUpdate = true;});
+
 droit.propriete = {  durete : 2};
+
+loadertexture.load('texture/wood/diff.jpg', function(img){ droit.map = img; droit.needsUpdate = true;});
+loadertexture.load('texture/wood/nor.exr', function(img){ droit.normalMap = img; droit.needsUpdate = true;});
+loadertexture.load('texture/wood/rough.jpg', function(img){ droit.roughnessMap = img; droit.needsUpdate = true;});
+
 gauche.propriete = {  durete : 1};
 
 
 
-const cube1 = new THREE.Mesh(geometryCentre, material);
-const cube2 = new THREE.Mesh(geometryDroit, material);
-const cube3 = new THREE.Mesh(geometryGauche, material);
+
+
+const cube1 = new THREE.Mesh(geometryCentre, centre);//fer
+const cube2 = new THREE.Mesh(geometryDroit, droit);//bois
+const cube3 = new THREE.Mesh(geometryGauche, gauche);//papier
 
 scene.add(cube1);
 scene.add(cube2);
