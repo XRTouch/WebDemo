@@ -2,8 +2,6 @@
 
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.126.0/examples/jsm/loaders/GLTFLoader.js';
-import { FirstPersonControls } from 'https://unpkg.com/three@0.126.0/examples/jsm/controls/FirstPersonControls.js';
-//import { PointerLockControls } from 'https://unpkg.com/three@0.126.0/examples/jsm/loaders/PointerLockControls.js';
 
 
 
@@ -96,21 +94,6 @@ renderer.setAnimationLoop(render);
 
 
 //cube 
-
-let plaqueVerre = {
-    durete : 2
-    //green
-};
-let plaqueFeuille = {
-    durete : 1
-    //blue
-};
-let plaqueFer = {
-    durete : 3
-    //red
-};
-
-
 const geometryCentre = new THREE.BoxGeometry(0.5,0.05,0.8);
 const geometryGauche = new THREE.BoxGeometry(0.5,0.02,0.8);
 const geometryDroit = new THREE.BoxGeometry(0.6,0.035,1);
@@ -121,10 +104,6 @@ let centre = new THREE.MeshStandardMaterial();
 let droit = new THREE.MeshStandardMaterial();
 let gauche = new THREE.MeshStandardMaterial();
 
-//let boxcentre = new THREE.Box3().setFromObject(geometryCentre);
-
-
-
 
 centre.propriete = {  durete : 3};//fer
 
@@ -133,13 +112,13 @@ loadertexture.load('texture/metal/diff.jpg', function(img){ centre.map = img; ce
 loadertexture.load('texture/metal/nor.exr', function(img){ centre.normalMap = img; centre.needsUpdate = true;});
 loadertexture.load('texture/metal/rough.jpg', function(img){ centre.roughnessMap = img; centre.needsUpdate = true;});
 
-droit.propriete = {  durete : 2};
+droit.propriete = {  durete : 2};//bois
 
 loadertexture.load('texture/wood/diff.jpg', function(img){ droit.map = img; droit.needsUpdate = true;});
 loadertexture.load('texture/wood/nor.exr', function(img){ droit.normalMap = img; droit.needsUpdate = true;});
 loadertexture.load('texture/wood/rough.jpg', function(img){ droit.roughnessMap = img; droit.needsUpdate = true;});
 
-gauche.propriete = {  durete : 1};
+gauche.propriete = {  durete : 1};//papier
 
 
 
@@ -149,7 +128,8 @@ const cube1 = new THREE.Mesh(geometryCentre, centre);//fer
 const cube2 = new THREE.Mesh(geometryDroit, droit);//bois
 const cube3 = new THREE.Mesh(geometryGauche, gauche);//papier
 
-const box = new THREE.Box3().setFromObject(cube1);
+
+
 
 
 
@@ -166,9 +146,19 @@ cube3.rotation.set(0,0.78,0);
 cube1.castShadow = true;
 cube2.castShadow = true;
 cube3.castShadow = true;
-box.setFromCenterAndSize( new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 2, 1, 3 ) );
-const boxview = new THREE.BoxHelper(cube1, 0xffff00);
-scene.add(boxview);
+
+
+//hitbox des plaque
+let box1 = new THREE.Box3().setFromObject(cube1);
+let box2 = new THREE.Box3().setFromObject(cube2);
+let box3 = new THREE.Box3().setFromObject(cube3);
+
+
+
+//hitbox vue 
+
+//const boxview = new THREE.Box3Helper(box, 0xffff00);
+//scene.add(boxview);
 
 //x = -2.8 y = 1.3 z=0
 //x = 0.8  y = 1.3  z = -3.9 
