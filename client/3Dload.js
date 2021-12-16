@@ -72,7 +72,7 @@ loader.load('./map3D/ciseaux.glb', function(glb){
     })
     glb.scene.scale.set(0.1,0.1,0.1);
     scene.add(glb.scene);
-    console.log('yo');
+    console.log(glb.scene);
 }, undefined, function(error){
     console.error(error);
 });
@@ -149,9 +149,9 @@ cube3.castShadow = true;
 
 
 //hitbox des plaque
-let box1 = new THREE.Box3().setFromObject(cube1);
-let box2 = new THREE.Box3().setFromObject(cube2);
-let box3 = new THREE.Box3().setFromObject(cube3);
+let box1 = new THREE.Box3().setFromObject(cube1);//fer/centre   
+let box2 = new THREE.Box3().setFromObject(cube2);//bois/droit
+let box3 = new THREE.Box3().setFromObject(cube3);//papier/gauche
 
 
 
@@ -234,11 +234,6 @@ function render(time){
     };
     camera.lookAt(lookPos.x, lookPos.y, lookPos.z);
     if(ciseaux != null){
-        ciseaux.children[0].children[1].morphTargetInfluences[1] = 1;
-        ciseaux.children[0].children[0].morphTargetInfluences[1] = 1;   
-        
-        ciseaux.children[0].children[1].updateMorphTargets();
-        ciseaux.children[0].children[0].updateMorphTargets();
         ciseaux.position.set(lookPos.x, lookPos.y, lookPos.z);
     }
 
