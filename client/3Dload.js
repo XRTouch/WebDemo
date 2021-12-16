@@ -235,6 +235,8 @@ function render(time){
     camera.lookAt(lookPos.x, lookPos.y, lookPos.z);
     if(ciseaux != null){
         ciseaux.position.set(lookPos.x, lookPos.y, lookPos.z);
+        ciseaux.rotation.copy(camera.rotation);
+        ciseaux.translateY(-0.2);
     }
 
     //animation du cube
