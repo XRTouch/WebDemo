@@ -115,9 +115,15 @@ const geometryCentre = new THREE.BoxGeometry(0.5,0.05,0.8);
 const geometryGauche = new THREE.BoxGeometry(0.5,0.02,0.8);
 const geometryDroit = new THREE.BoxGeometry(0.6,0.035,1);
 
+
+
 let centre = new THREE.MeshStandardMaterial();
 let droit = new THREE.MeshStandardMaterial();
 let gauche = new THREE.MeshStandardMaterial();
+
+//let boxcentre = new THREE.Box3().setFromObject(geometryCentre);
+
+
 
 
 centre.propriete = {  durete : 3};//fer
@@ -143,6 +149,10 @@ const cube1 = new THREE.Mesh(geometryCentre, centre);//fer
 const cube2 = new THREE.Mesh(geometryDroit, droit);//bois
 const cube3 = new THREE.Mesh(geometryGauche, gauche);//papier
 
+const box = new THREE.Box3().setFromObject(cube1);
+
+
+
 scene.add(cube1);
 scene.add(cube2);
 scene.add(cube3);
@@ -156,7 +166,9 @@ cube3.rotation.set(0,0.78,0);
 cube1.castShadow = true;
 cube2.castShadow = true;
 cube3.castShadow = true;
-
+box.setFromCenterAndSize( new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 2, 1, 3 ) );
+const boxview = new THREE.BoxHelper(cube1, 0xffff00);
+scene.add(boxview);
 
 //x = -2.8 y = 1.3 z=0
 //x = 0.8  y = 1.3  z = -3.9 
