@@ -79,6 +79,7 @@ loader.load('./map3D/ciseaux.glb', function(glb){
 
 
 
+
 //light
 const yo = new THREE.AmbientLight(0x404040, 5); // soft white light
 scene.add(yo);
@@ -207,6 +208,14 @@ window.addEventListener("mousemove", ev => {
     mouseDelta.y += ev.movementY;
 });
 
+//permet de calculer l'angle de rotation des ciseaux 
+function map(val, in_min, in_max, out_min, out_max) {
+    return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+
+
+
+
 //animation camera + renderer
 function render(time){
 
@@ -236,9 +245,18 @@ function render(time){
     if(ciseaux != null){
         ciseaux.position.set(lookPos.x, lookPos.y, lookPos.z);
         ciseaux.rotation.copy(camera.rotation);
+        ciseaux.rotation.set(0, 1.05, 0)
         ciseaux.translateY(-0.2);
+
+        ciseaux.children[0].children[1].rotation.set(-1.57, 0.4*Math.cos(time*0.01), 1.57);
+        ciseaux.children[0].children[0].rotation.set(0, 0 , 0.4*Math.cos(time * 0.01));
+
+
+        //console.log(ciseaux.children[0].children[1].rotation.set(-1.57, Math.cos(time*0.0001), 1.57));
+        //ciseaux.children[0].children[2].children[1].rotation
     }
 
+    //0.3 ; -0.1
     //animation du cube
     // cube1.rotation.x += 0.015;
     // cube1.rotation.y += 0.01;
