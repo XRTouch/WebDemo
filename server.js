@@ -6,7 +6,7 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const addon = require("./cppInterface/cppInterface");
 console.log('init');
-addon.init("COM5");
+addon.init("COM3");
 
 /* 
 Serveur web par defaut :)
