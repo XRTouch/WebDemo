@@ -213,8 +213,8 @@ function map(val, in_min, in_max, out_min, out_max) {
     return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 
-
-
+  //creer les ciseaux IRL 
+  let IRLCiseaux = new Ciseaux();
 
 //animation camera + renderer
 function render(time){
@@ -241,29 +241,21 @@ function render(time){
         y :  Math.cos(camRot.y) + camera.position.y,
         z : Math.sin(camRot.x) * Math.sin(camRot.y) + camera.position.z
     };
+
     camera.lookAt(lookPos.x, lookPos.y, lookPos.z);
     if(ciseaux != null){
         ciseaux.position.set(lookPos.x, lookPos.y, lookPos.z);
         ciseaux.rotation.copy(camera.rotation);
         ciseaux.rotation.set(0, 1.05, 0)
         ciseaux.translateY(-0.2);
+        let radian = map(IRLCiseaux.getAngle(), 0, 70, -0.4 , 0.4)
+        ciseaux.children[0].children[1].rotation.set(-1.57, radian, 1.57);
+        ciseaux.children[0].children[0].rotation.set(0, 0 ,radian);
+        //console.log(radian);
 
-        ciseaux.children[0].children[1].rotation.set(-1.57, 0.4*Math.cos(time*0.01), 1.57);
-        ciseaux.children[0].children[0].rotation.set(0, 0 , 0.4*Math.cos(time * 0.01));
-
-
-        //console.log(ciseaux.children[0].children[1].rotation.set(-1.57, Math.cos(time*0.0001), 1.57));
-        //ciseaux.children[0].children[2].children[1].rotation
+        //ciseaux.children[0].children[1].rotation.set(-1.57, 0.4*Math.cos(time*0.01), 1.57);
+        //ciseaux.children[0].children[0].rotation.set(0, 0 , 0.4*Math.cos(time*0.01));
     }
-
-    //0.3 ; -0.1
-    //animation du cube
-    // cube1.rotation.x += 0.015;
-    // cube1.rotation.y += 0.01;
-    // cube2.rotation.x += 0.015;
-    // cube2.rotation.y += 0.01;
-    // cube3.rotation.x += 0.015;
-    // cube3.rotation.y += 0.01;
 }
 
 
