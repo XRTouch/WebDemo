@@ -209,7 +209,7 @@ window.addEventListener("mousemove", ev => {
 });
 
 //permet de calculer l'angle de rotation des ciseaux 
-function map(val, in_min, in_max, out_max, out_min) {
+function map(val, in_min, in_max, out_min, out_max) {
     return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 
@@ -248,9 +248,10 @@ function render(time){
         ciseaux.rotation.copy(camera.rotation);
         ciseaux.rotation.set(0, 1.05, 0)
         ciseaux.translateY(-0.2);
-        let radian = map(IRLCiseaux.getAngle(), 0, 70, -0.08, 0.43)
+        let radian = map(IRLCiseaux.getAngle(), 0, 70, -0.4 , 0.4)
         ciseaux.children[0].children[1].rotation.set(-1.57, radian, 1.57);
         ciseaux.children[0].children[0].rotation.set(0, 0 ,radian);
+        //console.log(radian);
 
         //ciseaux.children[0].children[1].rotation.set(-1.57, 0.4*Math.cos(time*0.01), 1.57);
         //ciseaux.children[0].children[0].rotation.set(0, 0 , 0.4*Math.cos(time*0.01));
