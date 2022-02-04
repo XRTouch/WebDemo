@@ -1,11 +1,9 @@
-import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
-import * as Loader from './3DLoader.js';
-
 export class Ciseaux {
     /** Socket de connection entre les ciseaux et le serveur */
     static socket = null;
     /**@type {number} Angle des ciseaux */
     static angle = 0;
+
 
     /**
      * Initialise les ciseaux
@@ -14,6 +12,8 @@ export class Ciseaux {
         if (Ciseaux.socket == null) {
             Ciseaux.socket = io();
             Ciseaux.socket.on("custom/getAngle", val => {
+                Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
+                console.log(Ciseaux.angle);
                 Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
             });
         }
@@ -37,40 +37,33 @@ export class Ciseaux {
         return Ciseaux.angle;
     }
 
-    /**
-     * Change la position des ciseaux
-     * @param {number} x position x
-     * @param {number} y position y
-     * @param {number} z position z
-     */
     setPosition(x, y, z) {
         this.modele.position.set(x, y, z);
         this.modele.translateY(-0.2);
     }
 
-    /**
-     * Change la rotation des ciseaux
-     * @param {number} x rotation x
-     * @param {number} y rotation y
-     * @param {number} z rotation z
-     */
-    setRotation(x, y, z) {
-        this.modele.rotation.set(x, y, z);
+    setRotation(r) {
+        this.modele.rotation.set(0, 1.05, 0);
     }
 
-    /**
-     * Charge le modele 3D des ciseaux dans la scene
-     */
     load(scene) {
-        Loader.loadModel("./map3D/ciseaux.glb").then(model => {
-            this.modele = model;
-            model.scale.set(0.08, 0.08, 0.08);
+        const loader = new GLTFLoader();
+        loader.load('./map3D/ciseaux.glb', glb => {
+            console.log(glb);
+            this.modele = glb.scene;
+            glb.scene.traverse(node => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                }
+            })
+            glb.scene.scale.set(0.1, 0.1, 0.1);
+            scene.add(glb.scene);
+        }, undefined, function (error) {
+            console.error(error);
         });
     }
 
-    /**
-     * Actualise l'etat des ciseaux
-     */
     update(dt = 0) {
         let radian = map(this.getAngle(), 0, 70, 0.43, -0.08);
         this.modele.children[0]?.children[1]?.rotation.set(-1.57, radian, 1.57);
