@@ -88,11 +88,16 @@ ciseaux.load(scene);
 
 //animation camera + renderer
 let last = 0;
-function render(time){
-
+let FPS = 60;
+const FPS_COUNTER = document.getElementById("fps-counter")
+function render(time) {
     renderer.render(scene, camera);
     let dt = (time - last)/1000;
     last = time;
+
+    const NEWFPS = 1 / dt;
+    FPS += (NEWFPS - FPS) * dt;
+    FPS_COUNTER.innerHTML = "FPS: "+Math.round(FPS);
 
     player.update(dt);
     let lookPos = player.getLookPos();
