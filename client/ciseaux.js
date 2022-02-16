@@ -19,6 +19,9 @@ export class Ciseaux {
         }
         this.cible = new THREE.Vector3();
         this.modele = new THREE.Mesh();
+        this.posTarget = new THREE.Vector3();
+        this.rotTarget = new THREE.Vector3();
+        this.animSpeed = 4;
     }
 
     /**
@@ -44,8 +47,7 @@ export class Ciseaux {
      * @param {number} z position z
      */
     setPosition(x, y, z) {
-        this.modele.position.set(x, y, z);
-        this.modele.translateY(-0.2);
+        this.posTarget.set(x, y, z);
     }
 
     /**
@@ -55,7 +57,7 @@ export class Ciseaux {
      * @param {number} z rotation z
      */
     setRotation(x, y, z) {
-        this.modele.rotation.set(x, y, z);
+        this.rotTarget.set(x, y, z)
     }
 
     /**
@@ -72,6 +74,16 @@ export class Ciseaux {
      * Actualise l'etat des ciseaux
      */
     update(dt = 0) {
+        this.modele.position.set(
+            this.modele.position.x + (this.posTarget.x - this.modele.position.x) * dt,
+            1.3,
+            this.modele.position.z + (this.posTarget.z - this.modele.position.z) * dt
+        );
+        this.modele.rotation.set(
+            this.modele.rotation.x + (this.rotTarget.x - this.modele.rotation.x) * dt,
+            this.modele.rotation.y + (this.rotTarget.y - this.modele.rotation.y) * dt,
+            this.modele.rotation.z + (this.rotTarget.z - this.modele.rotation.z) * dt
+        );
         let radian = map(this.getAngle(), 0, 70, 0.43, -0.08);
         this.modele.children[0]?.children[1]?.rotation.set(-1.57, radian, 1.57);
         this.modele.children[0]?.children[0]?.rotation.set(0, 0, radian);

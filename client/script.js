@@ -8,7 +8,7 @@ scene.background = new THREE.Color(0x59abba);
 const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer  = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = false;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ReinhardToneMapping;
 renderer.toneMappingExposure = 2.5;
@@ -89,16 +89,16 @@ ciseaux.load(scene);
 //animation camera + renderer
 let last = 0;
 function render(time){
-
-    renderer.render(scene, camera);
     let dt = (time - last)/1000;
     last = time;
 
-    player.update(dt);
     let lookPos = player.getLookPos();
+    let camRot = player.getCameraRot();
     ciseaux.setPosition(lookPos.x, lookPos.y, lookPos.z);
-    ciseaux.setRotation(camera.rotation.x, camera.rotation.y, camera.rotation.z);
-    ciseaux.setRotation(0, 1.05, 0)
+    ciseaux.setRotation(camRot.z, camRot.y, camRot.x);
     ciseaux.modele.translateY(-0.2);
     ciseaux.update(dt);
+    player.update(dt);
+    
+    renderer.render(scene, camera);
 }

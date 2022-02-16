@@ -54,11 +54,18 @@ export class Player {
     }
 
     getLookPos() {
-        // TODO
         return  {
-            x : 0,
+            x : this.group.position.x + Math.sin(this.camRot.x) * Math.cos(this.camRot.y),
+            y : this.camera.position.y - Math.sin(this.camRot.y),
+            z : this.group.position.z - Math.cos(this.camRot.x) * Math.cos(this.camRot.y)
+        };
+    }
+
+    getCameraRot() {
+        return  {
+            x : this.camRot.x,
             y : 0,
-            z : 0
+            z : this.camRot.y
         };
     }
 
@@ -81,7 +88,7 @@ export class Player {
     update(dt) {
         // change camera and player orientation
         this.camRot.x += mouseDelta.x * 0.01;
-        this.camRot.y += mouseDelta.y * 0.01;
+        this.camRot.y = Math.max(Math.min(this.camRot.y + mouseDelta.y * 0.01, Math.PI / 2), -Math.PI / 2);
         mouseDelta = {x: 0, y: 0};
         this.camera.lookAt(1, 1, 1);
         this.camera.rotation.set(-this.camRot.y, 0, 0)
