@@ -1,45 +1,16 @@
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 import { Ciseaux } from "./Ciseaux.js";
-import * as Loader from "./3DLoader.js";
 import  { Player } from "./Player.js";
+import * as engine from "./Engine.js";
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x59abba);
-const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer  = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = false;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ReinhardToneMapping;
-renderer.toneMappingExposure = 2.5;
-document.body.appendChild(renderer.domElement);
-
-camera.position.set(0,1.8,0);
-camera.lookAt(-1,1.4,0);
-
+engine.setup();
 const player = new Player();
-player.attachCamera(camera);
-
-//load de l'espace 3D 
-Loader.setScene(scene);
-Loader.loadModel("./map3D/map.gltf");
-
-//light
-const yo = new THREE.AmbientLight(0x404040, 5); // soft white light
-scene.add(yo);
-var light = new THREE.PointLight(0xffffff, 2.5, 100);
-light.castShadow = true;
-light.position.set(0, 5, 0);
-light.shadow.bias = -0.0001;
-light.shadow.mapSize.width = 1024;
-light.shadow.mapSize.height = 1024;
-scene.add(light);
-renderer.setAnimationLoop(render);
+player.attachCamera(engine.getCamera());
 
 //cube 
 const geometryCentre = new THREE.BoxGeometry(0.5,0.05,0.8);
-const geometryGauche = new THREE.BoxGeometry(0.5,0.02,0.8);
-const geometryDroit = new THREE.BoxGeometry(0.6,0.035,1);
+const geometryGauche = new THREE.BoxGeometry(0.5,0.01,0.8);
+const geometryDroit = new THREE.BoxGeometry(0.5,0.03,0.8);
 
 let centre = new THREE.MeshStandardMaterial();
 let droit = new THREE.MeshStandardMaterial();
@@ -63,9 +34,10 @@ const cube1 = new THREE.Mesh(geometryCentre, centre);//fer
 const cube2 = new THREE.Mesh(geometryDroit, droit);//bois
 const cube3 = new THREE.Mesh(geometryGauche, gauche);//papier
 
-scene.add(cube1);
-scene.add(cube2);
-scene.add(cube3);
+engine.getScene().add(cube1);
+engine.getScene().add(cube2);
+engine.getScene().add(cube3);
+let cubes = [cube1, cube2, cube3];
 
 cube1.position.set(-2.8,1.3,0);
 cube2.position.set(-0.8,1.3,-3.9);
@@ -84,28 +56,53 @@ let box3 = new THREE.Box3().setFromObject(cube3); //papier/gauche
 
 //creer les ciseaux IRL 
 let ciseaux = new Ciseaux();
-ciseaux.load(scene);
+ciseaux.load();
 
 //animation camera + renderer
 let last = 0;
 let FPS = 60;
 const FPS_COUNTER = document.getElementById("fps-counter")
+
+engine.setAnimationLoop(render);
 function render(time) {
     let dt = (time - last)/1000;
     last = time;
 
-    const NEWFPS = 1 / dt;
-    FPS += (NEWFPS - FPS) * dt;
-    FPS_COUNTER.innerHTML = "FPS: "+Math.round(FPS);
+    if (dt < 0.5) {
+        const NEWFPS = 1 / dt;
+        FPS += (NEWFPS - FPS) * dt;
+        FPS_COUNTER.innerHTML = "FPS: "+Math.round(FPS);
+    }
 
     player.update(dt);
-    let lookPos = player.getLookPos();
-    let camRot = player.getCameraRot();
-    ciseaux.setPosition(lookPos.x, lookPos.y, lookPos.z);
-    ciseaux.setRotation(camRot.z, camRot.y, camRot.x);
-    ciseaux.modele.translateY(-0.2);
-    ciseaux.update(dt);
+    let cisPos = player.getLookPos();
+    cisPos.y -= 0.2;
+    let cisRot = player.getCameraRot();
     player.update(dt);
+
+    let pos = player.getPosition();
+    cubes.forEach(cube => {
+        let p = cube.position;
+        let dist = distance(pos, p);
+        if (dist < 1.5) {
+            // mettre les ciseaux a la position / rotation pour cette plaque
+            cisPos = p.clone();
+            cisPos.add(new THREE.Vector3(0.32*Math.cos(-cube.rotation.y), 0, 0.32*Math.sin(-cube.rotation.y)));
+            cisRot = cube.quaternion.clone()
+            .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), Math.PI/2))
+            .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/2));
+        }
+    });
     
-    renderer.render(scene, camera);
+    ciseaux.setPosition(cisPos.x, cisPos.y, cisPos.z);
+    ciseaux.setRotation(cisRot);
+    ciseaux.update(dt);
+
+    engine.render();
+}
+
+function distance(p1, p2) {
+    let xa = p1.x - p2.x;
+    let za = p1.z - p2.z;
+    return Math.sqrt(xa*xa + za*za);
 }

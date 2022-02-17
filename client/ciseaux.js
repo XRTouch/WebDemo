@@ -20,7 +20,7 @@ export class Ciseaux {
         this.cible = new THREE.Vector3();
         this.modele = new THREE.Mesh();
         this.posTarget = new THREE.Vector3();
-        this.rotTarget = new THREE.Vector3();
+        this.rotTarget = new THREE.Quaternion();
         this.animSpeed = 4;
     }
 
@@ -52,21 +52,19 @@ export class Ciseaux {
 
     /**
      * Change la rotation des ciseaux
-     * @param {number} x rotation x
-     * @param {number} y rotation y
-     * @param {number} z rotation z
+     * @param {number} rot rotation
      */
-    setRotation(x, y, z) {
-        this.rotTarget.set(x, y, z)
+    setRotation(rot) {
+        this.rotTarget.copy(rot);
     }
 
     /**
      * Charge le modele 3D des ciseaux dans la scene
      */
-    load(scene) {
+    load() {
         Loader.loadModel("./map3D/ciseaux.glb").then(model => {
             this.modele = model;
-            model.scale.set(0.08, 0.08, 0.08);
+            model.scale.set(0.05, 0.05, 0.05);
         });
     }
 
@@ -74,6 +72,7 @@ export class Ciseaux {
      * Actualise l'etat des ciseaux
      */
     update(dt = 0) {
+        /*
         this.modele.position.set(
             this.modele.position.x + (this.posTarget.x - this.modele.position.x) * dt,
             1.3,
@@ -84,6 +83,10 @@ export class Ciseaux {
             this.modele.rotation.y + (this.rotTarget.y - this.modele.rotation.y) * dt,
             this.modele.rotation.z + (this.rotTarget.z - this.modele.rotation.z) * dt
         );
+        */
+        this.modele.position.copy(this.posTarget);
+        this.modele.quaternion.copy(this.rotTarget.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -0.45)));
+
         let radian = map(this.getAngle(), 0, 70, 0.43, -0.08);
         this.modele.children[0]?.children[1]?.rotation.set(-1.57, radian, 1.57);
         this.modele.children[0]?.children[0]?.rotation.set(0, 0, radian);

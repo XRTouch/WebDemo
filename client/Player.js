@@ -1,6 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 let keys = {z: 0, q: 0, s: 0, d: 0};
 let mouseDelta = {x: 0, y: 0};
+let sensi = 0.8;
 
 function updateKey(code, state) {
     keys[code] = state;
@@ -33,8 +34,8 @@ window.addEventListener("keyup", ev => {
 });
 
 window.addEventListener("mousemove", ev => {
-    mouseDelta.x += ev.movementX;
-    mouseDelta.y += ev.movementY;
+    mouseDelta.x += ev.movementX * sensi;
+    mouseDelta.y += ev.movementY * sensi;
 });
 
 export class Player {
@@ -42,7 +43,7 @@ export class Player {
         this.group = new THREE.Group();
         this.camRot = {x: 0, y: 0};
         this.camera = null;
-        this.speed = 2;
+        this.speed = 1.2;
     }
 
     setPosition(x, y, z) {
@@ -51,6 +52,10 @@ export class Player {
 
     setRotation(x, y, z) {
         this.group.rotation.set(x, y, z);
+    }
+
+    getPosition() {
+        return this.group.position;
     }
 
     getLookPos() {
@@ -62,11 +67,7 @@ export class Player {
     }
 
     getCameraRot() {
-        return  {
-            x : this.camRot.x,
-            y : 0,
-            z : this.camRot.y
-        };
+        return this.group.quaternion.clone().multiply(this.camera.quaternion);
     }
 
     setSpeed(speed) {
@@ -76,6 +77,7 @@ export class Player {
     attachCamera(camera) {
         if (this.camera != null) this.detachCamera();
         this.camera = camera;
+        this.camera.position.set(0, 1.8, 0);
         this.group.add(camera);
     }
 
