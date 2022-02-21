@@ -15,7 +15,10 @@ export function setup() {
     document.body.appendChild(renderer.domElement);
     //load de l'espace 3D 
     Loader.setScene(scene);
-    Loader.loadModel("./map3D/map.gltf");
+    let cookie = localStorage.getItem("highres");
+    if (cookie != null && cookie == "true")
+        Loader.loadModel("./map3D/map2.glb");
+    else Loader.loadModel("./map3D/map.gltf");
 
     //light
     const yo = new THREE.AmbientLight(0x404040, 5); // soft white light
