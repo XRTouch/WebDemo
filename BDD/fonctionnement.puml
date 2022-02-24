@@ -1,0 +1,19 @@
+@startuml
+title Fonctionnement de la Base de donnee
+
+participant PageWeb as web
+participant Serveur as serv
+participant "Base de donnée" as bdd
+
+activate web
+    web -> serv : getResource()
+    activate serv
+        serv -> bdd : lecture()
+        activate bdd
+        bdd -> serv : information
+        deactivate bdd
+    serv -> web : information
+    deactivate serv
+deactivate web
+
+@enduml
