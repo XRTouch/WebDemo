@@ -1,5 +1,6 @@
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 import * as Loader from "./3DLoader.js";
+import { getResource } from "./essentials.js";
 let scene = null, camera = null, renderer = null;
 
 export function setup() {
@@ -13,12 +14,23 @@ export function setup() {
     renderer.toneMapping = THREE.ReinhardToneMapping;
     renderer.toneMappingExposure = 2.5;
     document.body.appendChild(renderer.domElement);
+
+    window.onresize = () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+    };
+
     //load de l'espace 3D 
     Loader.setScene(scene);
     let cookie = localStorage.getItem("highres");
     if (cookie != null && cookie == "true")
-        Loader.loadModel("./map3D/map2.glb");
-    else Loader.loadModel("./map3D/map.gltf");
+    getResource(["Modeles", "1", "lien"]).then(data => {
+        Loader.loadModel(data);
+    });
+    else getResource(["Modeles", "0", "lien"]).then(data => {
+        Loader.loadModel(data);
+    });
 
     //light
     const yo = new THREE.AmbientLight(0x404040, 5); // soft white light

@@ -1,5 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 import * as Loader from './3DLoader.js';
+import { getResource } from './essentials.js';
+import { map } from "./essentials.js";
 
 export class Ciseaux {
     /** Socket de connection entre les ciseaux et le serveur */
@@ -11,12 +13,6 @@ export class Ciseaux {
      * Initialise les ciseaux
      */
     constructor() {
-        if (Ciseaux.socket == null) {
-            Ciseaux.socket = io();
-            Ciseaux.socket.on("custom/getAngle", val => {
-                Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
-            });
-        }
         this.cible = new THREE.Vector3();
         this.modele = new THREE.Mesh();
         this.posTarget = new THREE.Vector3();
@@ -58,13 +54,23 @@ export class Ciseaux {
         this.rotTarget.copy(rot);
     }
 
+    getPosition() {
+        return this.modele.position.clone();
+    }
+
+    getRotation() {
+        return this.modele.rotation.clone();
+    }
+
     /**
      * Charge le modele 3D des ciseaux dans la scene
      */
     load() {
-        Loader.loadModel("./map3D/ciseaux.glb").then(model => {
-            this.modele = model;
-            model.scale.set(0.05, 0.05, 0.05);
+        getResource(["Modeles", "2", "lien"]).then(data => {
+            Loader.loadModel(data).then(model => {
+                this.modele = model;
+                model.scale.set(0.05, 0.05, 0.05);
+            });
         });
     }
 

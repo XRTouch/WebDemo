@@ -1,72 +1,44 @@
-export class Ciseaux {
-    /** Socket de connection entre les ciseaux et le serveur */
-    static socket = null;
-    /**@type {number} Angle des ciseaux */
-    static angle = 0;
+import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 
-
-    /**
-     * Initialise les ciseaux
-     */
-    constructor() {
-        if (Ciseaux.socket == null) {
-            Ciseaux.socket = io();
-            Ciseaux.socket.on("custom/getAngle", val => {
-                Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
-                console.log(Ciseaux.angle);
-                Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
-            });
-        }
-        this.cible = new THREE.Vector3();
-        this.modele = new THREE.Mesh();
-    }
-
-    /**
-     * Change l'angle des ciseaux (en degres, entre 0 et 70)
-     * @param {number} angle nouvel angle des ciseaux (0-70)
-     */
-    setAngle(angle) {
-        socket.emit("custom/setAngle", angle);
-    }
-
-    /**
-     * Retourne l'angle des ciseaux
-     * @returns angle des ciseaux en degres
-     */
-    getAngle() {
-        return Ciseaux.angle;
+export class Plaque {
+    constructor(textures, proprietes) {
+        this.textures = textures;
+        this.proprietes = proprietes;
+        this.material = new THREE.MeshStandardMaterial();
+        this.modele = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.03,0.8), this.material);
+        this.modele.castShadow = true;
+        this.modele.receiveShadow = true;
     }
 
     setPosition(x, y, z) {
         this.modele.position.set(x, y, z);
-        this.modele.translateY(-0.2);
     }
 
-    setRotation(r) {
-        this.modele.rotation.set(0, 1.05, 0);
+    setRotation(x, y, z) {
+        this.modele.rotation.set(x, y, z);
     }
 
-    load(scene) {
-        const loader = new GLTFLoader();
-        loader.load('./map3D/ciseaux.glb', glb => {
-            console.log(glb);
-            this.modele = glb.scene;
-            glb.scene.traverse(node => {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = true;
-                }
-            })
-            glb.scene.scale.set(0.1, 0.1, 0.1);
-            scene.add(glb.scene);
-        }, undefined, function (error) {
-            console.error(error);
-        });
+    getPosition() {
+        return this.modele.position.clone();
+    }
+
+    getRotation() {
+        return this.modele.rotation.clone();
+    }
+
+    load() {
+        if (this.textures.length == 0) {
+            this.material.color = new THREE.Color(0xffffff);
+            this.material.needsUpdate = true;
+            return;
+        }
+        const loadertexture = new THREE.TextureLoader();
+        loadertexture.load(this.textures[0], (img) => { this.material.map = img; this.material.needsUpdate = true;});
+        loadertexture.load(this.textures[1], (img) => { this.material.normalMap = img; this.material.needsUpdate = true;});
+        loadertexture.load(this.textures[2], (img) => { this.material.roughnessMap = img; this.material.needsUpdate = true;});
     }
 
     update(dt = 0) {
-        let radian = map(this.getAngle(), 0, 70, 0.43, -0.08);
-        this.modele.children[0]?.children[1]?.rotation.set(-1.57, radian, 1.57);
-        this.modele.children[0]?.children[0]?.rotation.set(0, 0, radian);
+        
     }
 }

@@ -1,0 +1,26 @@
+@startuml BDD_diag
+title Diagramme BDD
+
+class Plaque {
+    id: int
+    position: Vector3
+    rotation: Quaternion
+    durete: int
+}
+
+class Texture {
+    id: int
+    id_plaque: int
+    lien: String
+}
+
+Plaque "0..1" -> "0..*" Texture : textures
+
+class Modele {
+    id: int
+    position: Vector3
+    rotation: Quaternion
+    fichier: String
+}
+
+@enduml

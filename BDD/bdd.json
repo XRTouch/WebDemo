@@ -1,0 +1,53 @@
+{
+    "Plaques": [
+        {
+            "id": 1,
+            "position": {"x": -2.8, "y": 1.3, "z": 0},
+            "rotation": {"x": 0, "y": 0, "z": 0},
+            "durete": 3,
+            "textures": [
+                    "texture/metal/diff.jpg",
+                    "texture/metal/nor.exr",
+                    "texture/metal/rough.jpg"
+            ]
+        },
+        {
+            "id": 2,
+            "position": {"x": -0.8, "y": 1.3, "z": -3.9},
+            "rotation": {"x": 0, "y": -0.78, "z": 0},
+            "durete": 2,
+            "textures": [
+                    "texture/wood/diff.jpg",
+                    "texture/wood/nor.exr",
+                    "texture/wood/rough.jpg"
+            ]
+        },
+        {
+            "id": 3,
+            "position": {"x": -0.8, "y": 1.3, "z": 3.9},
+            "rotation": {"x": 0, "y": 0.78, "z": 0},
+            "durete": 1,
+            "textures": []
+        }
+    ],
+    "Modeles" : [
+        {
+            "id": 1,
+            "position": {"x": 0, "y": 0, "z": 0},
+            "rotation": {"x": 0, "y": 0, "z": 0},
+            "lien": "./map3D/map.gltf"
+        },
+        {
+            "id": 2,
+            "position": {"x": 0, "y": 0, "z": 0},
+            "rotation": {"x": 0, "y": 0, "z": 0},
+            "lien": "./map3D/map2.glb"
+        },
+        {
+            "id": 3,
+            "position": {"x": 0, "y": 0, "z": 0},
+            "rotation": {"x": 0, "y": 0, "z": 0},
+            "lien": "./map3D/ciseaux.glb"
+        }
+    ]
+}
