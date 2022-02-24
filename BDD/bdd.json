@@ -6,9 +6,9 @@
             "rotation": {"x": 0, "y": 0, "z": 0},
             "durete": 3,
             "textures": [
-                    "texture/metal/diff.jpg",
-                    "texture/metal/nor.exr",
-                    "texture/metal/rough.jpg"
+                "texture/metal/diff.jpg",
+                "texture/metal/nor.exr",
+                "texture/metal/rough.jpg"
             ]
         },
         {
@@ -17,9 +17,9 @@
             "rotation": {"x": 0, "y": -0.78, "z": 0},
             "durete": 2,
             "textures": [
-                    "texture/wood/diff.jpg",
-                    "texture/wood/nor.exr",
-                    "texture/wood/rough.jpg"
+                "texture/wood/diff.jpg",
+                "texture/wood/nor.exr",
+                "texture/wood/rough.jpg"
             ]
         },
         {
