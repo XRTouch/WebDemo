@@ -15,7 +15,6 @@ let loadPlaque = (plaque) => {
     model.load();
     model.setPosition(plaque.position.x, plaque.position.y, plaque.position.z);
     model.setRotation(plaque.rotation.x, plaque.rotation.y, plaque.rotation.z);
-    const hitbox = new THREE.Box3().setFromObject(model.modele);
     cubes.push(model);
     engine.getScene().add(model.modele);
 };
@@ -26,6 +25,7 @@ getResource(["Plaques", "2"]).then(loadPlaque);
 //creer les ciseaux IRL 
 let ciseaux = new Ciseaux();
 ciseaux.load();
+document.ciseaux = ciseaux;
 
 //animation camera + renderer
 let last = 0;
@@ -50,6 +50,7 @@ function render(time) {
     player.update(dt);
 
     let pos = player.getPosition();
+    ciseaux.setLocked(false);
     cubes.forEach(cube => {
         let p = cube.getPosition();
         let r = cube.getRotation();
@@ -61,6 +62,7 @@ function render(time) {
             cisRot = cube.modele.quaternion.clone()
             .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), Math.PI/2))
             .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/2));
+            ciseaux.setLocked(true);
         }
     });
     
@@ -69,6 +71,13 @@ function render(time) {
     ciseaux.update(dt);
 
     engine.render();
+
+    if (ciseaux.locked) {
+        if (ciseaux.getAngle() < 30) {
+            ciseaux.setAngle(30);
+        }
+        else ciseaux.disable();
+    } else ciseaux.disable();
 }
 
 function distance(p1, p2) {

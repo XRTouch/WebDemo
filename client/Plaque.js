@@ -8,6 +8,7 @@ export class Plaque {
         this.modele = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.03,0.8), this.material);
         this.modele.castShadow = true;
         this.modele.receiveShadow = true;
+        this.hitbox = new THREE.Box3().setFromObject(this.modele);
     }
 
     setPosition(x, y, z) {

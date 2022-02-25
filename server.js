@@ -24,6 +24,7 @@ app.get('/*', (req, res) => {
     res.sendFile(path);
 });
 
+let cissorsEnabled = true;
 io.on("connection", socket => {
     let lastValue = -1;
     setInterval(() => {
@@ -32,9 +33,13 @@ io.on("connection", socket => {
             lastValue = newValue
             socket.emit("custom/getAngle", lastValue);
         }
-    }, 33);
+    }, 20);
     socket.on("custom/setAngle", val => {
-        addon.setForce(Math.max(Math.min(parseInt(val)+30, 100), 0));
+        if (cissorsEnabled)
+            addon.setForce(Math.max(Math.min(parseInt(val)+30, 100), 0));
+    });
+    socket.on("custom/disable", val => {
+        addon.setForce(0);
     });
 
     socket.on("custom/getResource", data => {
