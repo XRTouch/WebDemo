@@ -1,0 +1,80 @@
+@startuml
+title Exemple d'interaction utilisateur
+
+
+'- l'utilisateur bouge
+'- l'arduino detecte le changement et l'envoie au prog c++ (XRTouch)
+'- le prog c++ recois le changement et l'envoie au serveur
+'- le serveur adapte le format de la donnée et l'envoie au site web
+'- le site web bouge les ciseaux en fonction de la donnée
+'- le site web regarde pour une collision
+'- le site web envoie au serveur le retour de force
+'- le serveur adapte la donnée et l'envoie au prog c++ (XRTouch)
+'- le prog c++ l'envoie a l'arduino
+'- l'arduino applique la force sur les ciseaux de l'utilisateur 
+
+participant Utilisateur as user
+participant Ciseaux as ciseaux
+participant XRTouch as xr
+participant Serveur as server
+participant SiteWeb as site
+
+activate user
+    user -> ciseaux : bouge les ciseaux
+    activate ciseaux
+        ciseaux -> xr : nouvellePosition(position)
+        activate xr
+            xr -> server : nouvellePosition(position)
+            activate server
+                server -> site : nouvellePosition(position)
+                activate site
+                    site -> site : detecterColision()
+                    activate site
+                        site --> site : collision 
+                    deactivate site
+                    alt collision
+                        site -> server : appliquerRetourDeForce()
+                        activate server
+                            server -> xr : appliquerRetourDeForce()
+                            activate xr
+                                xr -> ciseaux : nouvelleForce(1)
+                                activate ciseaux
+                                    ciseaux -> user : retour de force
+                                    activate user
+                                        user --> ciseaux
+                                    deactivate user
+                                    ciseaux --> xr
+                                deactivate ciseaux
+                                xr --> server
+                            deactivate xr
+                            server --> site
+                        deactivate server
+                    else pas collision
+                        site -> server : retirerRetourDeForce()
+                        activate server
+                            server -> xr : retirerRetourDeForce()
+                            activate xr
+                                xr -> ciseaux : nouvelleForce(0)
+                                activate ciseaux
+                                    ciseaux -> user : pas de retour de force
+                                    activate user
+                                        user --> ciseaux
+                                    deactivate user
+                                    ciseaux --> xr
+                                deactivate ciseaux
+                                xr --> server
+                            deactivate xr
+                            server --> site
+                        deactivate server
+                    end
+                    site --> server
+                deactivate site
+                server --> xr
+            deactivate server
+            xr --> ciseaux
+        deactivate xr
+        ciseaux --> user
+    deactivate ciseaux
+deactivate user
+
+@enduml

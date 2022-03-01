@@ -1,0 +1,50 @@
+@startuml
+title initialisation de l'atelier 1
+
+participant "Utilisateur" as user
+participant "Site Web" as site
+participant "Serveur" as serv
+
+activate user
+    user -> site : Connexion au site web
+    activate site
+        site -> site : chargerJoueur()
+        activate site
+            site --> site
+        deactivate site
+        site -> site : chargerCarte()
+        activate site 
+            site -> serv : getRessource(["Modele", "0", lien])
+            activate serv
+                serv --> site : lien
+            deactivate serv
+            site -> serv : GET(lien)
+            activate serv
+                serv --> site : Map.glb
+            deactivate serv
+            site --> site
+        deactivate site
+        loop pour les 3 plaques
+            site -> site : chargerPlaque()
+            activate site 
+                site -> serv : getRessource(["Plaque", "n° plaque"])
+                activate serv
+                    serv --> site : plaque
+                deactivate serv
+                site -> site : ajouterPlaque(plaque)
+                activate site
+                    site --> site
+                deactivate site
+                site --> site
+            deactivate site
+        end
+        loop utilisateur toujours present
+            site -> site : actualiserAtelier()
+            activate site
+                site --> site
+            deactivate site
+        end
+    deactivate site
+    site --> user
+deactivate user
+@enduml
