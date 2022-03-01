@@ -1,0 +1,31 @@
+@startuml
+title Fonctionnement de la Base de donnee\n exemple de chargement du modèle 1
+
+participant PageWeb as web
+participant Serveur as serv
+participant "LecteurJSON" as bdd
+
+activate web
+    web -> serv : getResource(["Modeles", "1", "lien"])
+    activate serv
+        serv -> bdd : lireFichier(["Modeles", "1", "lien"])
+        activate bdd
+            bdd -> json : lecture()
+            activate json
+            json -> bdd : information
+            deactivate json
+        bdd -> serv : lien
+        deactivate bdd
+    serv -> web : lien
+    deactivate serv
+    web -> web : 3DLoader.loadModel(lien)
+    activate web
+        web -> serv : GET("Map.glb")
+        activate serv
+            serv --> web : fichier
+        deactivate serv
+        web --> web
+    deactivate web
+deactivate web
+
+@enduml

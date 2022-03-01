@@ -6,10 +6,31 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const addon = require("./cppInterface/cppInterface");
-console.log('init');
 addon.init("COM3");
 
-const BDD_FILE_PATH = __dirname+"/BDD/bdd.json";
+const BDD_FILE_PATH = __dirname+"/bdd.json";
+
+class LecteurJSON {
+    static data = null;
+    static chargerFichier() {
+        this.lireEtSauvegarderFichier(BDD_FILE_PATH);
+    }
+
+    static lireEtSauvegarderFichier(path) {
+        LecteurJSON.data = JSON.parse(fs.readFileSync(path, {encoding: "utf-8"}));
+    }
+
+    static lireFichier(path) {
+        if (LecteurJSON.data == null) {
+            LecteurJSON.chargerFichier();
+        }
+        let cursor = JSON.parse(JSON.stringify(LecteurJSON.data));
+        path.forEach(branch => {
+            try {cursor = cursor[branch];} catch (e) {cursor = null;}
+        });
+        return cursor;
+    }
+}
 
 /* 
 Serveur web par defaut :)
@@ -24,6 +45,13 @@ app.get('/*', (req, res) => {
     res.sendFile(path);
 });
 
+server.on("listening", () => {
+    console.log("server listening on port " + server.address().port);
+    process.stdout.write("Loading BDD ...");
+    LecteurJSON.chargerFichier();
+    process.stdout.write(" Done\n");
+});
+
 let cissorsEnabled = true;
 io.on("connection", socket => {
     let lastValue = -1;
@@ -35,8 +63,9 @@ io.on("connection", socket => {
         }
     }, 20);
     socket.on("custom/setAngle", val => {
-        if (cissorsEnabled)
+        if (cissorsEnabled) {
             addon.setForce(Math.max(Math.min(parseInt(val)+30, 100), 0));
+        }
     });
     socket.on("custom/disable", val => {
         addon.setForce(0);
@@ -54,7 +83,11 @@ io.on("connection", socket => {
                 id: data.id,
                 data: cursor
             });
-        })
+        });
+        socket.emit("custom/setResource", {
+            id: data.id,
+            data: LecteurJSON.lireFichier(data.path)
+        });
     });
 });
 

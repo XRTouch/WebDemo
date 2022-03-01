@@ -11,7 +11,7 @@ player.attachCamera(engine.getCamera());
 
 let cubes = [];
 let loadPlaque = (plaque) => {
-    const model = new Plaque(plaque.textures, {durete: plaque.durete});
+    const model = new Plaque(plaque.textures, plaque.proprietes);
     model.load();
     model.setPosition(plaque.position.x, plaque.position.y, plaque.position.z);
     model.setRotation(plaque.rotation.x, plaque.rotation.y, plaque.rotation.z);
@@ -74,6 +74,8 @@ function render(time) {
 
     if (ciseaux.locked) {
         if (ciseaux.getAngle() < 30) {
+            if (ciseaux.getAngle() < 25)
+                console.log("forcing");
             ciseaux.setAngle(30);
         }
         else ciseaux.disable();

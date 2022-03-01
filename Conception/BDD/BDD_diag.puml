@@ -6,21 +6,17 @@ class Plaque {
     position: Vector3
     rotation: Quaternion
     durete: int
+    temps: int
+    textureDiffuse: String
+    textureNormal: String
+    textureRoughness: String
 }
-
-class Texture {
-    id: int
-    id_plaque: int
-    lien: String
-}
-
-Plaque "0..1" -> "0..*" Texture : textures
 
 class Modele {
     id: int
     position: Vector3
     rotation: Quaternion
-    fichier: String
+    lien: String
 }
 
 @enduml

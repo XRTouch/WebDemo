@@ -1,4 +1,4 @@
-import * as engine from './Engine.js';
+//import * as engine from './Engine.js';
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
 import * as Loader from './3DLoader.js';
 import { getResource } from './essentials.js';
@@ -21,6 +21,7 @@ export class Ciseaux {
         this.animSpeed = 4;
         this.locked = false;
         this.enabled = false;
+        this.time = 0;
     }
 
     /**
@@ -96,6 +97,7 @@ export class Ciseaux {
      * Actualise l'etat des ciseaux
      */
     update(dt = 0) {
+        this.time += dt;
         this.modele.position.copy(this.posTarget);
         this.modele.quaternion.copy(this.rotTarget.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -0.45)));
 

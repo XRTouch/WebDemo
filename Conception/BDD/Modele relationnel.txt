@@ -1,0 +1,2 @@
+Plaque   (id: number, position: text, rotation: text, textureDiffuse: text, textureNormal: text, textureRoughness: text)
+Modele   (id: number, position: text, rotation: text, lien: text)

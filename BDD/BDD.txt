@@ -1,3 +1,0 @@
-Plaque   (id: number, position: text, rotation: text)
-Textures (id: number, id_plaque: number, lien: text)
-Modele   (id: number, position: text, rotation: text, fichier: text)

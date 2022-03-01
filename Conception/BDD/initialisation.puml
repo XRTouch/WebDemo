@@ -1,0 +1,27 @@
+@startuml
+title Fonctionnement de la Base de donnee\n exemple d'initialisation et d'utilisation du fichier json
+
+participant Utilisateur as user
+participant Serveur as serv
+participant "LecteurJSON" as bdd
+
+user -> serv : demarrage du serveur
+activate serv
+    serv -> bdd : chargerFichier()
+    activate bdd
+        create "fichier chargé" as json
+        bdd -> json : lireEtSauvegarderFichier()
+        bdd --> serv
+    deactivate bdd
+    
+    serv -> bdd : lireFichier(["Modeles", "2", "position"])
+    activate bdd
+        bdd -> json : lecture()
+        activate json
+        json -> bdd : information
+        deactivate json
+    bdd -> serv : position
+    deactivate bdd
+deactivate serv
+
+@enduml
