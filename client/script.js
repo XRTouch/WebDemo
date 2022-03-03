@@ -4,6 +4,8 @@ import  { Player } from "./Player.js";
 import { Plaque } from "./Plaque.js";
 import { getResource } from "./essentials.js";
 import * as engine from "./Engine.js";
+import { loadModel } from "./3DLoader.js";
+
 
 engine.setup();
 const player = new Player();
@@ -12,11 +14,10 @@ player.attachCamera(engine.getCamera());
 let cubes = [];
 let loadPlaque = (plaque) => {
     const model = new Plaque(plaque.textures, plaque.proprietes);
-    model.load();
+    model.load(plaque.lien);
     model.setPosition(plaque.position.x, plaque.position.y, plaque.position.z);
     model.setRotation(plaque.rotation.x, plaque.rotation.y, plaque.rotation.z);
     cubes.push(model);
-    engine.getScene().add(model.modele);
 };
 getResource(["Plaques", "0"]).then(loadPlaque);
 getResource(["Plaques", "1"]).then(loadPlaque);
@@ -32,8 +33,7 @@ let last = 0;
 let FPS = 60;
 const FPS_COUNTER = document.getElementById("fps-counter")
 
-engine.setAnimationLoop(render);
-function render(time) {
+engine.setAnimationLoop((time) => {
     let dt = (time - last)/1000;
     last = time;
 
@@ -74,13 +74,16 @@ function render(time) {
 
     if (ciseaux.locked) {
         if (ciseaux.getAngle() < 30) {
-            if (ciseaux.getAngle() < 25)
-                console.log("forcing");
-            ciseaux.setAngle(30);
+            if (ciseaux.getAngle() < 25) // l'utilsateur force sur les ciseaux 
+                plaque.setForcing(true);
+            else plaque.setForcing(false);
+            if (!plaque.cut) {
+                ciseaux.setAngle(30);
+            }
         }
         else ciseaux.disable();
     } else ciseaux.disable();
-}
+});
 
 function distance(p1, p2) {
     let xa = p1.x - p2.x;

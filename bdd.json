@@ -8,6 +8,7 @@
                 "durete": 3,
                 "temps": 9999
             },
+            "lien":  "map3D/plaque.glb",
             "textures": [
                 "texture/metal/diff.jpg",
                 "texture/metal/nor.exr",
@@ -22,6 +23,7 @@
                 "durete": 2,
                 "temps": 2
             },
+            "lien":  "map3D/plaque.glb",
             "textures": [
                 "texture/wood/diff.jpg",
                 "texture/wood/nor.exr",
@@ -36,6 +38,7 @@
                 "durete": 1,
                 "temps": 0.2
             },
+            "lien":  "map3D/plaque.glb",
             "textures": []
         }
     ],
