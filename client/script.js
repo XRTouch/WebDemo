@@ -50,6 +50,7 @@ engine.setAnimationLoop((time) => {
     player.update(dt);
 
     let pos = player.getPosition();
+    let plaque = null
     ciseaux.setLocked(false);
     cubes.forEach(cube => {
         let p = cube.getPosition();
@@ -62,6 +63,7 @@ engine.setAnimationLoop((time) => {
             cisRot = cube.modele.quaternion.clone()
             .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), Math.PI/2))
             .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/2));
+            plaque = cube;
             ciseaux.setLocked(true);
         }
     });
@@ -77,12 +79,17 @@ engine.setAnimationLoop((time) => {
             if (ciseaux.getAngle() < 25) // l'utilsateur force sur les ciseaux 
                 plaque.setForcing(true);
             else plaque.setForcing(false);
-            if (!plaque.cut) {
+            if (!plaque.cut)
                 ciseaux.setAngle(30);
-            }
+            else ciseaux.disable();
         }
         else ciseaux.disable();
     } else ciseaux.disable();
+
+    cubes.forEach(plaque => {
+        plaque.update(dt);
+        plaque.setForcing(false);
+    });
 });
 
 function distance(p1, p2) {

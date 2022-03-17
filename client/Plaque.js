@@ -4,7 +4,9 @@ import { loadModel } from './3DLoader.js';
 export class Plaque {
     constructor(textures, proprietes) {
         this.textures = textures;
+        /**@type {{temps: number, durete: number}} */
         this.proprietes = proprietes;
+        this.startTemps = this.proprietes.temps;
         this.material = new THREE.MeshStandardMaterial();
         this.modele = new THREE.Mesh();
         this.modele.castShadow = true;
@@ -12,6 +14,7 @@ export class Plaque {
         this.hitbox = new THREE.Box3().setFromObject(this.modele);
         this.cut = false;
         this.forcing = false;
+        this.speed = 5;
     }
 
     setForcing(bool) {
@@ -36,10 +39,18 @@ export class Plaque {
 
     load(path) {
         loadModel(path).then(model => {
+            model.traverse(node => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                    node.material.morphTarget = true;
+                }
+            });
             model.children[0].position.copy(this.modele.position);
             model.children[0].rotation.copy(this.modele.rotation);
             this.modele = model.children[0];
-            this.modele.material = this.material;
+            this.material = this.modele.material;
+            this.modele.material.morphTarget = true;
         });
         if (this.textures.length == 0) {
             this.material.color = new THREE.Color(0xffffff);
@@ -50,13 +61,30 @@ export class Plaque {
         loadertexture.load(this.textures[0], (img) => { this.material.map = img; this.material.needsUpdate = true;});
         loadertexture.load(this.textures[1], (img) => { this.material.normalMap = img; this.material.needsUpdate = true;});
         loadertexture.load(this.textures[2], (img) => { this.material.roughnessMap = img; this.material.needsUpdate = true;});
-
-        // TODO
-        // faire un compteur si forcing est a true pour casser la plaque (en fonction de temps dans this.proprietes)
-        // et modifier le this.model.morthTargetInfluence[0] pour la casser
     }
 
     update(dt = 0) {
-        
+        if (this.forcing && !this.cut) {
+            this.proprietes.temps -= dt;
+            if (this.proprietes.temps <= 0) {
+                this.cut = true;
+                this.proprietes.temps = 2;
+            }
+        }
+        if (!this.forcing && this.cut) {
+            this.proprietes.temps -= dt;
+            if (this.proprietes.temps <= 0) {
+                this.cut = false;
+                this.proprietes.temps = this.startTemps;
+            }
+        }
+        if (this.modele.morphTargetInfluences == undefined) return;
+        if (!this.cut) {
+            if (this.modele.morphTargetInfluences[0] > 0)
+                this.modele.morphTargetInfluences[0] += (0 - this.modele.morphTargetInfluences[0]) * dt * this.speed;
+        } else {
+            if (this.modele.morphTargetInfluences[0] < 1)
+                this.modele.morphTargetInfluences[0] += (1 - this.modele.morphTargetInfluences[0]) * dt * this.speed;
+        }
     }
 }

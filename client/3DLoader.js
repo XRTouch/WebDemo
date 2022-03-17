@@ -15,7 +15,6 @@ export function loadModel(path) {
     const promise = new Promise((resolve, reject) => {
         if (scene == null) reject("Scene is null");
         loader.load(path, glb => {
-            resolve(glb.scene);
             glb.scene.traverse(node => {
                 if (node.isMesh) {
                     node.castShadow = true;
@@ -23,6 +22,7 @@ export function loadModel(path) {
                 }
             });
             scene.add(glb.scene);
+            resolve(glb.scene);
         }, undefined, function (error) {
             reject(error);
         });

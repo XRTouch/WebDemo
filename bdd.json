@@ -5,7 +5,7 @@
             "position": {"x": -2.8, "y": 1.3, "z": 0},
             "rotation": {"x": 0, "y": 0, "z": 0},
             "proprietes": {
-                "durete": 3,
+                "durete": 99,
                 "temps": 9999
             },
             "lien":  "map3D/plaque.glb",
@@ -20,7 +20,7 @@
             "position": {"x": -0.8, "y": 1.3, "z": -3.9},
             "rotation": {"x": 0, "y": -0.78, "z": 0},
             "proprietes": {
-                "durete": 2,
+                "durete": 8,
                 "temps": 2
             },
             "lien":  "map3D/plaque.glb",
@@ -35,7 +35,7 @@
             "position": {"x": -0.8, "y": 1.3, "z": 3.9},
             "rotation": {"x": 0, "y": 0.78, "z": 0},
             "proprietes": {
-                "durete": 1,
+                "durete": 4,
                 "temps": 0.2
             },
             "lien":  "map3D/plaque.glb",
