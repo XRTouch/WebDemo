@@ -9,6 +9,7 @@ export class Ciseaux {
     static socket = null;
     /**@type {number} Angle des ciseaux */
     static angle = 0;
+    static movements = [];
 
     /**
      * Initialise les ciseaux
@@ -22,6 +23,26 @@ export class Ciseaux {
         this.locked = false;
         this.enabled = false;
         this.time = 0;
+    }
+
+    static updateMovement(val) {
+        // TODO: noise dans les valeurs de l'accelerometre (filtre?)
+        // + faire en sorte de detecter le mouvement arriere - avant en fonction de la diff de valeur dans le temps
+        Ciseaux.movements.push(val);
+        if (Ciseaux.movements.length > 50) Ciseaux.movements.shift();
+
+        let moy = 0;
+        let max = 0;
+        let min = 0;
+        for (let i = 0; i < Ciseaux.movements.length; i++) {
+            moy += Ciseaux.movements[i];
+            if (Ciseaux.movements[i] > max) max = Ciseaux.movements[i];
+            if (Ciseaux.movements[i] < min) min = Ciseaux.movements[i];
+        }
+        moy /= Ciseaux.movements.length;
+        console.log(Ciseaux.movements);
+
+        console.log("diff: "+ (max - min));
     }
 
     /**

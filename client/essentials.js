@@ -10,6 +10,7 @@ export function init() {
         Ciseaux.socket.on("custom/getAngle", val => {
             Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
         });
+        Ciseaux.socket.on("custom/getMovement", Ciseaux.updateMovement);
     }
 }
 

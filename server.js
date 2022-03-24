@@ -54,14 +54,20 @@ server.on("listening", () => {
 
 let cissorsEnabled = true;
 io.on("connection", socket => {
-    let lastValue = -1;
+    let lastAngle = 0;
+    let lastMovement = 0;
     setInterval(() => {
-        let newValue = addon.getAngle();
-        if (Math.abs(newValue - lastValue) >= 1) {
-            lastValue = newValue
-            socket.emit("custom/getAngle", lastValue);
+        let newAngle = addon.getAngle();
+        if (Math.abs(newAngle - lastAngle) >= 1) {
+            lastAngle = newAngle
+            socket.emit("custom/getAngle", newAngle);
         }
-    }, 20);
+        let newMovement = addon.getMovement();
+        if (newMovement != lastMovement) {
+            lastMovement = newMovement;
+            socket.emit("custom/getMovement", newMovement);
+        }
+    }, 40);
     socket.on("custom/setAngle", val => {
         if (cissorsEnabled) {
             addon.setForce(Math.max(Math.min(parseInt(val)+30, 100), 0));
