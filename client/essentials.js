@@ -8,7 +8,7 @@ export function init() {
     if (Ciseaux.socket == null) {
         Ciseaux.socket = io();
         Ciseaux.socket.on("custom/getAngle", val => {
-            Ciseaux.angle = Math.max(Math.min(val - 44, 180), 0);
+            Ciseaux.angle = Math.max(Math.min(val - 3, 180), 0);
         });
         Ciseaux.socket.on("custom/getMovement", Ciseaux.updateMovement);
     }

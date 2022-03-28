@@ -53,6 +53,7 @@ server.on("listening", () => {
 });
 
 let cissorsEnabled = true;
+let lastTime = Date.now();
 io.on("connection", socket => {
     let lastAngle = 0;
     let lastMovement = 0;
@@ -69,7 +70,8 @@ io.on("connection", socket => {
         }
     }, 40);
     socket.on("custom/setAngle", val => {
-        if (cissorsEnabled) {
+        if (cissorsEnabled && (lastTime < Date.now() - 40)) {
+            lastTime = Date.now();
             addon.setForce(Math.max(Math.min(parseInt(val)+30, 100), 0));
         }
     });

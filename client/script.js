@@ -59,7 +59,8 @@ engine.setAnimationLoop((time) => {
         if (dist < 1.5) {
             // mettre les ciseaux a la position / rotation pour cette plaque
             cisPos = p;
-            cisPos.add(new THREE.Vector3(0.32*Math.cos(-r.y), 0, 0.32*Math.sin(-r.y)));
+            let dist = (Ciseaux.askForCube)? 0.32 : 0.6;
+            cisPos.add(new THREE.Vector3(dist*Math.cos(-r.y), 0, dist*Math.sin(-r.y)));
             cisRot = cube.modele.quaternion.clone()
             .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), Math.PI/2))
             .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/2));
@@ -67,16 +68,15 @@ engine.setAnimationLoop((time) => {
             ciseaux.setLocked(true);
         }
     });
-    
     ciseaux.setPosition(cisPos.x, cisPos.y, cisPos.z);
     ciseaux.setRotation(cisRot);
     ciseaux.update(dt);
 
     engine.render();
 
-    if (ciseaux.locked) {
+    if (ciseaux.locked && Ciseaux.askForCube) {
         if (ciseaux.getAngle() < 30) {
-            if (ciseaux.getAngle() < 25) // l'utilsateur force sur les ciseaux 
+            if (ciseaux.getAngle() < 30-plaque.proprietes.durete) // l'utilsateur force sur les ciseaux 
                 plaque.setForcing(true);
             else plaque.setForcing(false);
             if (!plaque.cut)

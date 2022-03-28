@@ -4,12 +4,15 @@ import * as Loader from './3DLoader.js';
 import { getResource } from './essentials.js';
 import { map } from "./essentials.js";
 
+document.threshold = 0.5;
+
 export class Ciseaux {
     /** Socket de connection entre les ciseaux et le serveur */
     static socket = null;
     /**@type {number} Angle des ciseaux */
     static angle = 0;
     static movements = [];
+    static askForCube = false;
 
     /**
      * Initialise les ciseaux
@@ -26,23 +29,33 @@ export class Ciseaux {
     }
 
     static updateMovement(val) {
-        // TODO: noise dans les valeurs de l'accelerometre (filtre?)
-        // + faire en sorte de detecter le mouvement arriere - avant en fonction de la diff de valeur dans le temps
         Ciseaux.movements.push(val);
-        if (Ciseaux.movements.length > 50) Ciseaux.movements.shift();
+        if (Ciseaux.movements.length > 10) Ciseaux.movements.shift();
 
         let moy = 0;
-        let max = 0;
-        let min = 0;
+        let max = 0, maxIndex = 0;
+        let min = 0, minIndex = 0;
         for (let i = 0; i < Ciseaux.movements.length; i++) {
             moy += Ciseaux.movements[i];
-            if (Ciseaux.movements[i] > max) max = Ciseaux.movements[i];
-            if (Ciseaux.movements[i] < min) min = Ciseaux.movements[i];
+            if (Ciseaux.movements[i] > max) {
+                max = Ciseaux.movements[i];
+                maxIndex = i;
+            }
+            if (Ciseaux.movements[i] < min) {
+                min = Ciseaux.movements[i];
+                minIndex = i;
+            }
         }
         moy /= Ciseaux.movements.length;
-        console.log(Ciseaux.movements);
 
-        console.log("diff: "+ (max - min));
+        if (max >= moy+document.threshold && min <= moy-document.threshold) {
+            if (maxIndex > minIndex) {
+                Ciseaux.askForCube = true;
+            } else {
+                Ciseaux.askForCube = false;
+            }
+            Ciseaux.movements = [];
+        }
     }
 
     /**
