@@ -30,7 +30,7 @@ export class Ciseaux {
 
     static updateMovement(val) {
         Ciseaux.movements.push(val);
-        if (Ciseaux.movements.length > 10) Ciseaux.movements.shift();
+        if (Ciseaux.movements.length > 20) Ciseaux.movements.shift();
 
         let moy = 0;
         let max = 0, maxIndex = 0;

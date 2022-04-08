@@ -5,24 +5,18 @@ title Fonctionnement de l'application
 
 (*) --> "Connection à l'application web"
 --> "Chargement de l'environnement 3D"
---> "Chargement des ciseaux"
--->"Créer joueur"
+--> "Creation des mains"
+--> "Connexion au gant"
 
-if"Appuie sur les touches (zqsd)" then
--->[alors]"Joueur ce deplace dans l'environnement"
-
-if"Joueur ce deplace vers une plaque"then
--->[alors]"Essaye de couper la plaque"
--->"Reçois un retour de force avec le ciseaux physique"
--->(*)
-
+if "Collision entre l'index et le cube" then
+    -->[alors]"Retour de force sur l'index"
 else
-
--->[sinon]"Faire bouger les ciseaux physiquement"
-endif
-else
--->[sinon]"Le joueur reste immobile"
--->"Faire bouger les ciseaux physiquement"
+    --> [sinon] "pas de retour de force sur le pouce"
+    if "Collision entre le pouce et le cube" then
+        -->[alors]"Retour de force sur le pouce"
+        else
+            --> [sinon] "pas de retour de force sur le pouce"
+        endif
 endif
 
 -->"Ciseaux virtuel suivent le mouvement"
